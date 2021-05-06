@@ -58,6 +58,7 @@ namespace Nuke.Common.CI
             if (changedFiles.Count == 0)
                 return false;
 
+            // TODO: telemetry - ConfigurationGenerated
             Logger.Warn($"{generator.DisplayName} configuration files have changed.");
             changedFiles.ForEach(x => Logger.Trace($"Updated {x}"));
             return true;
