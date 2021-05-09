@@ -4,20 +4,18 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using JetBrains.Annotations;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Text;
 using Newtonsoft.Json.Linq;
 using Nuke.Common;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Utilities;
-using Nuke.Common.Utilities.Collections;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Nuke.SourceGenerators
@@ -25,10 +23,12 @@ namespace Nuke.SourceGenerators
     [Generator]
     public class StronglyTypedSolutionGenerator : ISourceGenerator
     {
+        // public void Initialize(InitializationContext context)
         public void Initialize(GeneratorInitializationContext context)
         {
         }
 
+        // public void Execute(SourceGeneratorContext context)
         public void Execute(GeneratorExecutionContext context)
         {
             var compilation = context.Compilation;
