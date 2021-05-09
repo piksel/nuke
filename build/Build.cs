@@ -93,6 +93,17 @@ partial class Build
         .Inherit<ITest>()
         .Partition(() => TestPartition);
 
+    Target CleanLocalPackages => _ => _
+        .After<IPack>()
+        .Executes(() =>
+        {
+            From<IPack>().PackagesDirectory.GlobFiles("*.nupkg")
+                .Select(x => new NuGetPackageResolver.InstalledPackage(x))
+                .Select(x => NuGetPackageResolver.GetGlobalInstalledPackage(x.Id, x.Version.ToString(), packagesConfigFile: null))
+                .WhereNotNull()
+                .ForEach(x => DeleteDirectory(x.Directory));
+        });
+
     bool IReportCoverage.CreateCoverageHtmlReport => true;
     bool IReportCoverage.ReportToCodecov => false;
 
@@ -138,4 +149,12 @@ partial class Build
     T From<T>()
         where T : INukeBuild
         => (T) (object) this;
+    //
+    // TValue FromThis<T, TValue>(Func<T, TValue> valueSelector)
+    //     where T : INukeBuild
+    //     => valueSelector.Invoke((T) (object) this);
+    //
+    // TValue FromBase<T, TValue>(Expression<Func<T, TValue>> valueSelector)
+    //     where T : INukeBuild
+    //     => valueSelector.GetMemberInfo().GetValueNonVirtual<TValue>(this);
 }
